@@ -25,3 +25,17 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+ext {
+    // App dependencies
+    supportLibraryVersion = '26.1.0'
+    rxjavaVersion = '2.1.5'
+    rxandroidVersion = '2.0.1'
+    retrofitVersion= '2.3.0'
+    gsonVersion = '2.8.2'
+    picassoVersion = '2.5.2'
+    butterknifeVersion = '8.8.1'
+
+    // API constants
+    baseUrl = '"https://raw.githubusercontent.com/rrafols/mobile_test/master/"'
+}
