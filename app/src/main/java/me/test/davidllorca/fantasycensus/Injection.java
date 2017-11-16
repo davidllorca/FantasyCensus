@@ -13,7 +13,7 @@ public class Injection {
      *
      * @return MoviesRepository
      */
-    public static CitizensRepository provideMoviesRepository() {
+    public static CitizensRepository provideCitizenRepository() {
         return CitizensRepository
                 .getInstance(CitizensRemoteDataSource.getInstance());
     }

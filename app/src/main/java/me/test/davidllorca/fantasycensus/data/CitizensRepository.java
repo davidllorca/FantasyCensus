@@ -11,7 +11,7 @@ import me.test.davidllorca.fantasycensus.data.model.Citizen;
 /**
  * Repository implementation of data layer.
  * <p>
- * (NOTE: Just remote source covered) //TODO
+ * (NOTE: Just remote source covered)
  */
 public class CitizensRepository {
 
