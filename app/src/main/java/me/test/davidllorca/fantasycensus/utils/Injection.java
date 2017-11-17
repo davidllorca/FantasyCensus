@@ -1,4 +1,4 @@
-package me.test.davidllorca.fantasycensus;
+package me.test.davidllorca.fantasycensus.utils;
 
 import me.test.davidllorca.fantasycensus.data.CitizensRepository;
 import me.test.davidllorca.fantasycensus.data.remote.CitizensRemoteDataSource;

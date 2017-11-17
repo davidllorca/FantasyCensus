@@ -8,11 +8,11 @@ import android.support.v7.widget.Toolbar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import me.test.davidllorca.fantasycensus.EspressoIdlingResource;
 import me.test.davidllorca.fantasycensus.R;
 import me.test.davidllorca.fantasycensus.data.model.Citizen;
 import me.test.davidllorca.fantasycensus.ui.citizendetail.CitizenDetailActivity;
 import me.test.davidllorca.fantasycensus.ui.citizenlist.CitizenListFragment;
+import me.test.davidllorca.fantasycensus.utils.EspressoIdlingResource;
 
 public class HomeActivity extends AppCompatActivity implements CitizenListFragment
         .OnCitizenListFragmentListener {

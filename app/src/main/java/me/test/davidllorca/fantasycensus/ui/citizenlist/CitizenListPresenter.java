@@ -4,8 +4,8 @@ import android.util.Log;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
-import me.test.davidllorca.fantasycensus.EspressoIdlingResource;
 import me.test.davidllorca.fantasycensus.data.CitizensRepository;
+import me.test.davidllorca.fantasycensus.utils.EspressoIdlingResource;
 
 /**
  * Presenter's implementation of {@link CitizenListFragment}.

@@ -26,9 +26,9 @@ android {
     }
 
     // see http://tools.android.com/tech-docs/unit-testing-support#TOC-Method-...-not-mocked.-
-//    testOptions {
-//        unitTests.returnDefaultValues = true
-//    }
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 
 dependencies {
@@ -44,7 +44,6 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxandroid:$rootProject.rxandroidVersion"
 
     // Retrofit & OkHttp
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     compile "com.squareup.retrofit2:retrofit:$rootProject.retrofitVersion"
     compile 'com.squareup.okhttp3:logging-interceptor:3.8.0'
     compile "com.squareup.retrofit2:converter-gson:$rootProject.retrofitVersion"
@@ -58,7 +57,7 @@ dependencies {
     annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.butterknifeVersion"
 
     // Gson
-    compile "com.google.code.gson:gson:$rootProject.gsonVersion"
+//    compile "com.google.code.gson:gson:$rootProject.gsonVersion"
 
     // Dependencies for local unit tests
     testImplementation "junit:junit:$rootProject.ext.junitVersion"

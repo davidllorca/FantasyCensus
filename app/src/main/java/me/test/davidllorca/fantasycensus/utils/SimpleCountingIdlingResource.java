@@ -1,4 +1,4 @@
-package me.test.davidllorca.fantasycensus;
+package me.test.davidllorca.fantasycensus.utils;
 
 import android.support.annotation.NonNull;
 import android.support.test.espresso.IdlingResource;

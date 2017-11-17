@@ -17,9 +17,9 @@ import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import me.test.davidllorca.fantasycensus.Injection;
 import me.test.davidllorca.fantasycensus.R;
 import me.test.davidllorca.fantasycensus.data.model.Citizen;
+import me.test.davidllorca.fantasycensus.utils.Injection;
 
 public class CitizenDetailActivity extends AppCompatActivity implements CitizenDetailContract
         .View {
