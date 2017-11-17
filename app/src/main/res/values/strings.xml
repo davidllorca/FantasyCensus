@@ -6,4 +6,11 @@
     <string name="search_hint">Search by name</string>
     <string name="title_activity_citizen_detail">CitizenDetailActivity</string>
     <string name="msg_no_match_any_citizen">\"%1$s\" did not match any citizen.</string>
+    <string name="label_hair_color">Hair color</string>
+    <string name="label_weight">Weight</string>
+    <string name="label_height">Height</string>
+    <string name="label_age">Age</string>
+    <string name="title_professions">Professions</string>
+    <string name="title_bio">Bio</string>
+    <string name="title_friends">Friends</string>
 </resources>

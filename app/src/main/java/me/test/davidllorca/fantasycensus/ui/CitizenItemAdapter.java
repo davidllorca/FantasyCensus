@@ -3,7 +3,6 @@ package me.test.davidllorca.fantasycensus.ui;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,45 +24,38 @@ import io.reactivex.schedulers.Schedulers;
 import me.test.davidllorca.fantasycensus.R;
 import me.test.davidllorca.fantasycensus.data.model.Citizen;
 
-/*
-TODO
+/**
+ * Adapter to bind {@link Citizen} items
  */
 public class CitizenItemAdapter
         extends RecyclerView.Adapter<CitizenItemAdapter.ViewHolder> {
 
-    public static final int HORIZONTAL_LINEAR_LAYOUT = 0;
-    public static final int STAGGERED_LAYOUT = 1;
     private final Context mContext;
-    private final OnCitizenItemAdapterListener mListener;
-    private int mItemLayoutResource;
     private List<Citizen> mDataSet;
     private List<Citizen> mDataSetFiltered;
+    private OnCitizenItemAdapterListener.OnClick mClickListener;
+    private OnCitizenItemAdapterListener.OnSearch mSearchListener;
 
-    public CitizenItemAdapter(Context context, int type,
-                              OnCitizenItemAdapterListener listener) {
+    public CitizenItemAdapter(Context context,
+                              OnCitizenItemAdapterListener.OnClick clickListener) {
         mContext = context;
         mDataSet = new ArrayList<>();
         mDataSetFiltered = new ArrayList<>();
-        mListener = listener;
-        setItemLayout(type);
+        mClickListener = clickListener;
     }
 
-    private void setItemLayout(int type) {
-        switch (type) {
-            case HORIZONTAL_LINEAR_LAYOUT:
-                mItemLayoutResource = R.layout.citizen_list_item_horizontal;
-                break;
-            default:
-                mItemLayoutResource = R.layout.citizen_list_item_vertical;
-                break;
-        }
+    public CitizenItemAdapter(Context context,
+                              OnCitizenItemAdapterListener.OnClick clickListener,
+                              OnCitizenItemAdapterListener.OnSearch searchListener) {
+        this(context, clickListener);
+        mSearchListener = searchListener;
     }
 
     @Override
     public CitizenItemAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int
             viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(mItemLayoutResource, parent, false);
+                .inflate(R.layout.citizen_list_item_vertical, parent, false);
         return new CitizenItemAdapter.ViewHolder(view);
     }
 
@@ -77,7 +69,7 @@ public class CitizenItemAdapter
                 .error(android.R.drawable.picture_frame)// TODO set placeholder
                 .into(holder.mPoster);
 
-        holder.itemView.setOnClickListener(v -> mListener.onClickItem(item));
+        holder.itemView.setOnClickListener(v -> onClickItem(item));
     }
 
     @Override
@@ -85,6 +77,11 @@ public class CitizenItemAdapter
         return mDataSetFiltered.size();
     }
 
+    /**
+     * Populate adapter data set.
+     *
+     * @param items data set.
+     */
     public void loadData(List<Citizen> items) {
         mDataSet.clear();
         mDataSet.addAll(items);
@@ -93,26 +90,54 @@ public class CitizenItemAdapter
         notifyDataSetChanged();
     }
 
+    /**
+     * Populate filtered data set.
+     *
+     * @param citizens filtered data set.
+     */
+    private void flushItems(List<Citizen> citizens) {
+        mDataSetFiltered.clear();
+        mDataSetFiltered.addAll(citizens);
+        notifyDataSetChanged();
+    }
+
+    /**
+     * Reset adapter with origin data set.
+     */
+    public void resetFilter() {
+        flushItems(mDataSet);
+        onResetSearch();
+    }
+
+    /**
+     * Filter data set. If query is empty or null it reset state.
+     *
+     * @param query String to match.
+     */
     public void filter(String query) {
         if (TextUtils.isEmpty(query)) {
             resetFilter();
         } else {
-            findMatches(query)
+            findMatchesByName(query)
                     .delay(400, TimeUnit.MILLISECONDS)
                     .subscribeOn(Schedulers.computation())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(citizens -> {
-                                mDataSetFiltered.clear();
-                                mDataSetFiltered.addAll(citizens);
+                                flushItems(citizens);
                                 notifyDataSetChanged();
-                                mListener.onSearchResults(query, citizens.size() > 0);
-                                Log.d("Search", "filter() returned: " + citizens.size());
+                                onSearchResults(query, citizens.size() > 0);
                             },
                             throwable -> resetFilter());
         }
     }
 
-    public Single<List<Citizen>> findMatches(String query) {
+    /**
+     * Check matches in data set by name. No case sensitive.
+     *
+     * @param query String to match.
+     * @return List Citizens.
+     */
+    public Single<List<Citizen>> findMatchesByName(String query) {
         return Observable.fromArray(mDataSet)
                 .flatMapIterable(citizens -> citizens)
                 .filter(citizen -> citizen.getName().toLowerCase().contains(query.toLowerCase
@@ -120,32 +145,58 @@ public class CitizenItemAdapter
                 .toList();
     }
 
-    public void resetFilter() {
-        Log.d("Search", "resetFilter() called");
-        mDataSetFiltered.clear();
-        mDataSetFiltered.addAll(mDataSet);
-        mListener.onResetSearch();
-        notifyDataSetChanged();
+    /**
+     * Callback event {@link OnCitizenItemAdapterListener.OnClick}
+     *
+     * @param item
+     */
+    private void onClickItem(Citizen item) {
+        mClickListener.onClickItem(item);
+    }
+
+    /**
+     * Callback event {@link OnCitizenItemAdapterListener.OnSearch}. Called after filter operation.
+     *
+     * @param query   String to match.
+     * @param matches true if it was any match, false otherwise.
+     */
+    private void onSearchResults(String query, boolean matches) {
+        if (mSearchListener != null) mSearchListener.onSearchResults(query, matches);
+    }
+
+    /**
+     * Callback event {@link OnCitizenItemAdapterListener.OnSearch}. Called when filter
+     * operations are reset to previous state.
+     */
+    private void onResetSearch() {
+        if (mSearchListener != null) mSearchListener.onResetSearch();
     }
 
     public interface OnCitizenItemAdapterListener {
 
-        /**
-         * Called on click event on item collection.
-         */
-        void onClickItem(Citizen item);
+        interface OnClick {
+            /**
+             * Called on click event on item collection.
+             */
+            void onClickItem(Citizen citizen);
+        }
 
-        /**
-         * Called on any search on collection.
-         */
-        void onSearchResults(String query, boolean matches);
+        interface OnSearch {
+            /**
+             * Called on any search on collection.
+             */
+            void onSearchResults(String query, boolean matches);
 
-        /**
-         * Called when there are no search matches.
-         */
-        void onResetSearch();
+            /**
+             * Called when there are no search matches.
+             */
+            void onResetSearch();
+        }
     }
 
+    /**
+     * Model of ViewHolder.
+     */
     class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.tv_citizen_item_name)
         TextView mName;

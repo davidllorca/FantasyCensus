@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -15,7 +14,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -28,40 +26,39 @@ import me.test.davidllorca.fantasycensus.data.model.Citizen;
 import me.test.davidllorca.fantasycensus.ui.CitizenItemAdapter;
 
 public class CitizenListFragment extends Fragment implements CitizenListContract.View,
-        CitizenItemAdapter.OnCitizenItemAdapterListener {
+        CitizenItemAdapter.OnCitizenItemAdapterListener.OnClick, CitizenItemAdapter
+                .OnCitizenItemAdapterListener.OnSearch {
 
-    private static final String TYPE_LAYOUT_KEY = "type_layout_list";
-    private static final String N_COLUMNS_KEY = "n_columns_key";
-
-    private static final int TYPE_STAGGERED_LAYOUT = 0;
-    private static final int TYPE_LINEAR_LAYOUT = 1;
-
+    /* VIEWS */
     @BindView(R.id.rv_fragment_citizen_list)
     RecyclerView mList;
     @BindView(R.id.tv_fragment_citizen_list_empty_results)
     TextView mEmptyMsgTextView;
 
-    private CitizenListPresenter mPresenter;
+    /**
+     * Implementation of {@link CitizenListContract.Presenter}
+     */
+    private CitizenListContract.Presenter mPresenter;
 
+    /**
+     * Adapter of RecyclerView.
+     */
     private CitizenItemAdapter mAdapter;
 
+    /**
+     * Callback to fragment host.
+     */
     private OnCitizenListFragmentListener mHostListener;
 
     public CitizenListFragment() {
-    }
-
-    public static CitizenListFragment newInstanceAsLinearLayout(Citizen item) {
-        CitizenListFragment fragment = new CitizenListFragment();
-        Bundle args = new Bundle();
-        args.putInt(TYPE_LAYOUT_KEY, TYPE_LINEAR_LAYOUT);
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+        // Init presenter
         mPresenter = new CitizenListPresenter(this, Injection.provideCitizenRepository());
     }
 
@@ -76,27 +73,17 @@ public class CitizenListFragment extends Fragment implements CitizenListContract
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        Bundle arguments = getArguments();
-        if (arguments == null) {
-            setupRecyclerView(mList, getResources().getInteger(R.integer
-                    .citizen_list_column_count_default));
-        } else {
-            setupRecyclerView(mList, arguments.getInt(N_COLUMNS_KEY, 1));
-        }
-
+        setupRecyclerView(mList, getResources().getInteger(R.integer
+                .citizen_list_column_count_default));
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView, @Nullable
             int nColumns) {
-        RecyclerView.LayoutManager layoutManager = nColumns > 1 ?
-                new StaggeredGridLayoutManager(nColumns, StaggeredGridLayoutManager.VERTICAL) :
-                new LinearLayoutManager(getContext(), LinearLayout.HORIZONTAL, false);
+        RecyclerView.LayoutManager layoutManager =
+                new StaggeredGridLayoutManager(nColumns, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
 
-        mAdapter = new CitizenItemAdapter(getContext(), nColumns > 1 ?
-                CitizenItemAdapter.STAGGERED_LAYOUT : CitizenItemAdapter.HORIZONTAL_LINEAR_LAYOUT,
-                this);
+        mAdapter = new CitizenItemAdapter(getContext(), this, this);
 
         recyclerView.setAdapter(mAdapter);
     }
@@ -112,7 +99,6 @@ public class CitizenListFragment extends Fragment implements CitizenListContract
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_home, menu);
-
         MenuItem menuItem = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) menuItem.getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -132,7 +118,6 @@ public class CitizenListFragment extends Fragment implements CitizenListContract
             return true;
         });
         super.onCreateOptionsMenu(menu, inflater);
-
     }
 
     @Override
@@ -157,20 +142,30 @@ public class CitizenListFragment extends Fragment implements CitizenListContract
         mHostListener = null;
     }
 
+    /**
+     * Callback event {@link CitizenItemAdapter.OnCitizenItemAdapterListener.OnClick}
+     */
     @Override
-    public void onClickItem(Citizen item) {
-        mHostListener.onCitizenClicked(item);
+    public void onClickItem(Citizen citizen) {
+        mHostListener.onCitizenClicked(citizen);
     }
 
+    /**
+     * Callback event {@link CitizenItemAdapter.OnCitizenItemAdapterListener.OnSearch}
+     */
     @Override
     public void onSearchResults(String query, boolean matches) {
         setListVisibility(matches);
         setNoResultViewVisibility(!matches, query);
     }
 
+    /**
+     * Callback event {@link CitizenItemAdapter.OnCitizenItemAdapterListener.OnSearch}
+     */
     @Override
     public void onResetSearch() {
         setListVisibility(true);
+        setNoResultViewVisibility(false, null);
     }
 
     /**
@@ -185,16 +180,16 @@ public class CitizenListFragment extends Fragment implements CitizenListContract
      */
     private void setNoResultViewVisibility(boolean visibility, String query) {
         mEmptyMsgTextView.setVisibility(visibility ? View.VISIBLE : View.GONE);
-        mEmptyMsgTextView.setText(getString(R.string.msg_no_match_any_citizen, query));
+        if (visibility) mEmptyMsgTextView.setText(getString(R.string.msg_no_match_any_citizen,
+                query));
     }
 
     /**
-     * Interface between fragment and its host.
+     * Interface between {@link CitizenListFragment} and its host.
      */
     public interface OnCitizenListFragmentListener {
 
         void onCitizenClicked(Citizen citizen);
-
     }
 
 }
