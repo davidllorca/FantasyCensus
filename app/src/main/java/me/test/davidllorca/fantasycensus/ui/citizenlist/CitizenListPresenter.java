@@ -4,6 +4,7 @@ import android.util.Log;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+import me.test.davidllorca.fantasycensus.EspressoIdlingResource;
 import me.test.davidllorca.fantasycensus.data.CitizensRepository;
 
 /**
@@ -24,10 +25,20 @@ public class CitizenListPresenter implements CitizenListContract.Presenter {
 
     @Override
     public void loadCitizens() {
+        EspressoIdlingResource.increment();
+        mView.setLoading(true);
         mRepository.getCitizens()
+                .doFinally(() -> {
+                    if (!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
+                        EspressoIdlingResource.decrement();
+                    }
+                })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(citizens -> mView.showCitizens(citizens),
-                        throwable -> Log.e(LOG_TAG, throwable.getMessage()));
+                .subscribe(citizens -> {
+                            mView.showCitizens(citizens);
+                            mView.setLoading(false);
+                        }
+                        , throwable -> Log.e(LOG_TAG, throwable.getMessage()));
     }
 }

@@ -42,6 +42,19 @@ public class Citizen implements Parcelable {
     @SerializedName("friends")
     List<String> friends;
 
+    public Citizen(int id, String name, String thumbnail, int age, double weight, double height,
+                   String hairColor, List<String> professions, List<String> friends) {
+        this.id = id;
+        this.name = name;
+        this.thumbnail = thumbnail;
+        this.age = age;
+        this.weight = weight;
+        this.height = height;
+        this.hairColor = hairColor;
+        this.professions = professions;
+        this.friends = friends;
+    }
+
     protected Citizen(Parcel in) {
         id = in.readInt();
         name = in.readString();

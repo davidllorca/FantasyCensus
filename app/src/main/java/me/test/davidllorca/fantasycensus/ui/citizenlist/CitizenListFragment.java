@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -14,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.List;
@@ -32,6 +34,8 @@ public class CitizenListFragment extends Fragment implements CitizenListContract
     /* VIEWS */
     @BindView(R.id.rv_fragment_citizen_list)
     RecyclerView mList;
+    @BindView(R.id.pb_fragment_citizen_list)
+    ProgressBar mProgressbar;
     @BindView(R.id.tv_fragment_citizen_list_empty_results)
     TextView mEmptyMsgTextView;
 
@@ -123,6 +127,12 @@ public class CitizenListFragment extends Fragment implements CitizenListContract
     @Override
     public void showCitizens(List<Citizen> citizens) {
         mAdapter.loadData(citizens);
+    }
+
+    @UiThread
+    @Override
+    public void setLoading(boolean visibility) {
+        mProgressbar.setVisibility(visibility ? View.VISIBLE : View.GONE);
     }
 
     @Override

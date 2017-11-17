@@ -13,6 +13,7 @@ public interface CitizenListContract {
 
         void showCitizens(List<Citizen> citizens);
 
+        void setLoading(boolean isVisible);
     }
 
     interface Presenter {

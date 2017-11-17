@@ -24,7 +24,7 @@ import me.test.davidllorca.fantasycensus.data.model.Citizen;
 public class CitizenDetailActivity extends AppCompatActivity implements CitizenDetailContract
         .View {
 
-    private static final String CITIZEN_KEY = "citizen";
+    public static final String CITIZEN_KEY = "citizen";
 
     /* VIEWS */
     @BindView(R.id.toolbar_layout_citizen_detail)

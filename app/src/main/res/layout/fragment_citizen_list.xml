@@ -23,6 +23,12 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:visibility="gone" />
 
-
+    <ProgressBar
+        android:id="@+id/pb_fragment_citizen_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:indeterminate="true"
+        android:visibility="gone" />
 </FrameLayout>
 

@@ -42,6 +42,10 @@ public class CitizensRepository {
         return sInstance;
     }
 
+    public static void destroyInstance() {
+        sInstance = null;
+    }
+
     public Single<List<Citizen>> getCitizens() {
         return mRemoteDataSource.getCitizens();
     }
