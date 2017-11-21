@@ -1,8 +1,5 @@
 package me.test.davidllorca.fantasycensus.data.model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -10,19 +7,8 @@ import java.util.List;
 /**
  * Model of class
  */
-public class Citizen implements Parcelable {
+public class Citizen {
 
-    public static final Creator<Citizen> CREATOR = new Creator<Citizen>() {
-        @Override
-        public Citizen createFromParcel(Parcel in) {
-            return new Citizen(in);
-        }
-
-        @Override
-        public Citizen[] newArray(int size) {
-            return new Citizen[size];
-        }
-    };
     @SerializedName("id")
     int id;
     @SerializedName("name")
@@ -53,18 +39,6 @@ public class Citizen implements Parcelable {
         this.hairColor = hairColor;
         this.professions = professions;
         this.friends = friends;
-    }
-
-    protected Citizen(Parcel in) {
-        id = in.readInt();
-        name = in.readString();
-        thumbnail = in.readString();
-        age = in.readInt();
-        weight = in.readDouble();
-        height = in.readDouble();
-        hairColor = in.readString();
-        professions = in.createStringArrayList();
-        friends = in.createStringArrayList();
     }
 
     public int getId() {
@@ -101,38 +75,5 @@ public class Citizen implements Parcelable {
 
     public List<String> getFriends() {
         return friends;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
-        dest.writeString(name);
-        dest.writeString(thumbnail);
-        dest.writeInt(age);
-        dest.writeDouble(weight);
-        dest.writeDouble(height);
-        dest.writeString(hairColor);
-        dest.writeStringList(professions);
-        dest.writeStringList(friends);
-    }
-
-    @Override
-    public String toString() {
-        return "Citizen{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", thumbnail='" + thumbnail + '\'' +
-                ", age=" + age +
-                ", weight=" + weight +
-                ", height=" + height +
-                ", hairColor='" + hairColor + '\'' +
-                ", professions=" + professions +
-                ", friends=" + friends +
-                '}';
     }
 }

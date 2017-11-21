@@ -7,9 +7,8 @@ import me.test.davidllorca.fantasycensus.data.CitizensDataSource;
 import me.test.davidllorca.fantasycensus.data.model.Citizen;
 
 /**
- * Created by David Llorca <davidllorcabaron@gmail.com> on 16/11/17.
+ * Logic implementation of remote data source.
  */
-
 public class CitizensRemoteDataSource implements CitizensDataSource {
 
     //Singleton instantiation

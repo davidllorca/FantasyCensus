@@ -23,6 +23,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import me.test.davidllorca.fantasycensus.R;
 import me.test.davidllorca.fantasycensus.data.model.Citizen;
+import me.test.davidllorca.fantasycensus.ui.viewmodel.CitizenViewModel;
 
 /**
  * Adapter to bind {@link Citizen} items
@@ -31,8 +32,8 @@ public class CitizenItemAdapter
         extends RecyclerView.Adapter<CitizenItemAdapter.ViewHolder> {
 
     private final Context mContext;
-    private List<Citizen> mDataSet;
-    private List<Citizen> mDataSetFiltered;
+    private List<CitizenViewModel> mDataSet;
+    private List<CitizenViewModel> mDataSetFiltered;
     private OnCitizenItemAdapterListener.OnClick mClickListener;
     private OnCitizenItemAdapterListener.OnSearch mSearchListener;
 
@@ -62,7 +63,7 @@ public class CitizenItemAdapter
     @Override
     public void onBindViewHolder(final CitizenItemAdapter.ViewHolder holder, int
             position) {
-        Citizen item = mDataSetFiltered.get(position);
+        CitizenViewModel item = mDataSetFiltered.get(position);
         holder.mName.setText(item.getName());
         Picasso.with(mContext)
                 .load(item.getThumbnail())
@@ -82,7 +83,7 @@ public class CitizenItemAdapter
      *
      * @param items data set.
      */
-    public void loadData(List<Citizen> items) {
+    public void loadData(List<CitizenViewModel> items) {
         mDataSet.clear();
         mDataSet.addAll(items);
         mDataSetFiltered.clear();
@@ -95,7 +96,7 @@ public class CitizenItemAdapter
      *
      * @param citizens filtered data set.
      */
-    private void flushItems(List<Citizen> citizens) {
+    private void flushItems(List<CitizenViewModel> citizens) {
         mDataSetFiltered.clear();
         mDataSetFiltered.addAll(citizens);
         notifyDataSetChanged();
@@ -137,7 +138,7 @@ public class CitizenItemAdapter
      * @param query String to match.
      * @return List Citizens.
      */
-    public Single<List<Citizen>> findMatchesByName(String query) {
+    public Single<List<CitizenViewModel>> findMatchesByName(String query) {
         return Observable.fromArray(mDataSet)
                 .flatMapIterable(citizens -> citizens)
                 .filter(citizen -> citizen.getName().toLowerCase().contains(query.toLowerCase
@@ -150,7 +151,7 @@ public class CitizenItemAdapter
      *
      * @param item
      */
-    private void onClickItem(Citizen item) {
+    private void onClickItem(CitizenViewModel item) {
         mClickListener.onClickItem(item);
     }
 
@@ -178,7 +179,7 @@ public class CitizenItemAdapter
             /**
              * Called on click event on item collection.
              */
-            void onClickItem(Citizen citizen);
+            void onClickItem(CitizenViewModel citizen);
         }
 
         interface OnSearch {

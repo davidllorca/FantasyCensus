@@ -1,6 +1,6 @@
 package me.test.davidllorca.fantasycensus.ui.citizendetail;
 
-import me.test.davidllorca.fantasycensus.data.model.Citizen;
+import me.test.davidllorca.fantasycensus.ui.viewmodel.CitizenViewModel;
 
 /**
  * Contract of UI/Presenter.
@@ -9,7 +9,7 @@ public interface CitizenDetailContract {
 
     interface View {
 
-        void showCitizen(Citizen citizen);
+        void showCitizen(CitizenViewModel citizen);
 
     }
 

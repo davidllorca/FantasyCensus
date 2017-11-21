@@ -8,7 +8,7 @@ import java.util.List;
 import me.test.davidllorca.fantasycensus.data.model.Citizen;
 
 /**
- * Response's model of movie list.
+ * Response's model of citizen list.
  */
 class CitizenListResponse {
 

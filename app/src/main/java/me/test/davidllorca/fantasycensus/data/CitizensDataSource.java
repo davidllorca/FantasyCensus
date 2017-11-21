@@ -6,7 +6,7 @@ import io.reactivex.Single;
 import me.test.davidllorca.fantasycensus.data.model.Citizen;
 
 /**
- * Contract between data source and {@link CitizensRepository}.
+ * Contract between data sources and {@link CitizensRepository}.
  */
 public interface CitizensDataSource {
 

@@ -17,15 +17,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.test.davidllorca.fantasycensus.R;
-import me.test.davidllorca.fantasycensus.data.model.Citizen;
 import me.test.davidllorca.fantasycensus.ui.CitizenItemAdapter;
-import me.test.davidllorca.fantasycensus.utils.Injection;
+import me.test.davidllorca.fantasycensus.ui.viewmodel.CitizenViewModel;
 
 public class CitizenListFragment extends Fragment implements CitizenListContract.View,
         CitizenItemAdapter.OnCitizenItemAdapterListener.OnClick, CitizenItemAdapter
@@ -63,7 +63,7 @@ public class CitizenListFragment extends Fragment implements CitizenListContract
         setHasOptionsMenu(true);
 
         // Init presenter
-        mPresenter = new CitizenListPresenter(this, Injection.provideCitizenRepository());
+        mPresenter = new CitizenListPresenter(this);
     }
 
     @Override
@@ -125,7 +125,7 @@ public class CitizenListFragment extends Fragment implements CitizenListContract
     }
 
     @Override
-    public void showCitizens(List<Citizen> citizens) {
+    public void showCitizens(List<CitizenViewModel> citizens) {
         mAdapter.loadData(citizens);
     }
 
@@ -133,6 +133,11 @@ public class CitizenListFragment extends Fragment implements CitizenListContract
     @Override
     public void setLoading(boolean visibility) {
         mProgressbar.setVisibility(visibility ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void showError(String error) {
+        Toast.makeText(getContext(), R.string.msg_generic_error, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -156,7 +161,7 @@ public class CitizenListFragment extends Fragment implements CitizenListContract
      * Callback event {@link CitizenItemAdapter.OnCitizenItemAdapterListener.OnClick}
      */
     @Override
-    public void onClickItem(Citizen citizen) {
+    public void onClickItem(CitizenViewModel citizen) {
         mHostListener.onCitizenClicked(citizen);
     }
 
@@ -199,7 +204,7 @@ public class CitizenListFragment extends Fragment implements CitizenListContract
      */
     public interface OnCitizenListFragmentListener {
 
-        void onCitizenClicked(Citizen citizen);
+        void onCitizenClicked(CitizenViewModel citizen);
     }
 
 }

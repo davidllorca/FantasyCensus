@@ -19,7 +19,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.test.davidllorca.fantasycensus.R;
 import me.test.davidllorca.fantasycensus.data.model.Citizen;
-import me.test.davidllorca.fantasycensus.utils.Injection;
+import me.test.davidllorca.fantasycensus.ui.viewmodel.CitizenViewModel;
 
 public class CitizenDetailActivity extends AppCompatActivity implements CitizenDetailContract
         .View {
@@ -59,7 +59,7 @@ public class CitizenDetailActivity extends AppCompatActivity implements CitizenD
      * @param citizen Citizen to show in detail.
      * @return Intent
      */
-    public static Intent getIntentByCitizen(Context context, Citizen citizen) {
+    public static Intent getIntentByCitizen(Context context, CitizenViewModel citizen) {
         Bundle extras = new Bundle();
         extras.putParcelable(CitizenDetailActivity.CITIZEN_KEY, citizen);
         Intent intent = new Intent(context, CitizenDetailActivity.class);
@@ -83,10 +83,10 @@ public class CitizenDetailActivity extends AppCompatActivity implements CitizenD
         }
 
         // Init presenter
-        mPresenter = new CitizenDetailPresenter(this, Injection.provideCitizenRepository());
+        mPresenter = new CitizenDetailPresenter(this);
 
         // Get item to show.
-        Citizen targetCitizen = getIntent().getExtras().getParcelable(CitizenDetailActivity
+        CitizenViewModel targetCitizen = getIntent().getExtras().getParcelable(CitizenDetailActivity
                 .CITIZEN_KEY);
         if (targetCitizen != null) {
             showCitizen(targetCitizen);
@@ -106,7 +106,7 @@ public class CitizenDetailActivity extends AppCompatActivity implements CitizenD
     }
 
     @Override
-    public void showCitizen(Citizen citizen) {
+    public void showCitizen(CitizenViewModel citizen) {
         Picasso.with(this)
                 .load(citizen.getThumbnail())
                 .into(mThumbnailImageView);
