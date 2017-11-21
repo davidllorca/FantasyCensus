@@ -8,4 +8,4 @@
 - **Picasso:** I usually use Glide to perform image downloading and caching operations but that's fine knows anything else new. Very easy to use.
 - **JUnit, Espresso, Mockito and the rest:** Recommended libraries to execute unit and instrumented test.
 
-> [**Download apk**](https://drive.google.com/open?id=1zcuk8-SPqlPS6K9lgBnjrxmKy2RiN0VA) if there are any build or configuration problem.
+> [**Download apk**](https://drive.google.com/open?id=1B45tONL_zUVmVyQ1Ldz4hMsIYASgrhHu) if there are any build or configuration problem.

@@ -9,15 +9,15 @@ import org.mockito.MockitoAnnotations;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.Single;
 import me.test.davidllorca.fantasycensus.RxImmediateSchedulerRule;
-import me.test.davidllorca.fantasycensus.data.CitizensRepository;
-import me.test.davidllorca.fantasycensus.data.model.Citizen;
+import me.test.davidllorca.fantasycensus.domain.GetCitizensInteractor;
+import me.test.davidllorca.fantasycensus.domain.GetCitizensInteractorImpl;
 import me.test.davidllorca.fantasycensus.ui.citizenlist.CitizenListContract;
 import me.test.davidllorca.fantasycensus.ui.citizenlist.CitizenListPresenter;
+import me.test.davidllorca.fantasycensus.ui.viewmodel.CitizenViewModel;
 
+import static org.mockito.Matchers.anyList;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for the implementation of {@link CitizenListPresenter}
@@ -27,14 +27,14 @@ public class CitizenListPresenterTest {
     @ClassRule
     public static final RxImmediateSchedulerRule schedulers = new RxImmediateSchedulerRule();
 
-    private static List<Citizen> RESPONSE;
+    private static List<CitizenViewModel> RESPONSE;
 
     @Mock
-    Citizen citizen;
-
+    CitizenViewModel citizen;
     @Mock
-    private CitizensRepository mCitizensRepository;
-
+    GetCitizensInteractor.Callback mCallback;
+    @Mock
+    private GetCitizensInteractorImpl mGetCitizensInteractor;
     @Mock
     private CitizenListContract.View mCitizenListView;
 
@@ -45,7 +45,7 @@ public class CitizenListPresenterTest {
     public void setupCitizenListPresenter() {
         MockitoAnnotations.initMocks(this);
 
-        mCitizenListPresenter = new CitizenListPresenter(mCitizenListView, mCitizensRepository);
+        mCitizenListPresenter = new CitizenListPresenter(mCitizenListView);
 
         RESPONSE = new ArrayList<>();
         RESPONSE.add(citizen);
@@ -53,13 +53,11 @@ public class CitizenListPresenterTest {
 
     @Test
     public void loadCitizensFromRepositoryAndLoadIntoView() {
-        when(mCitizensRepository.getCitizens()).thenReturn(Single.just(RESPONSE));
-
         mCitizenListPresenter.loadCitizens();
 
         verify(mCitizenListView).setLoading(true);
         verify(mCitizenListView).setLoading(false);
-        verify(mCitizenListView).showCitizens(RESPONSE);
+        verify(mCitizenListView).showCitizens(anyList());
     }
 
 }
