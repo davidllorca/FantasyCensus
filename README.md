@@ -1,4 +1,4 @@
-# FantasyCensus
+# FantasyCensus [Test project]
 
 ## Libraries used
 
